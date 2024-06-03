@@ -4,11 +4,22 @@ from socket import *
 host = '10.129.58.175'
 port = 9999
 
-client_socket = socket(AF_INET, SOCK_STREAM)
-client_socket.connect((host, port))
-client_socket.sendall('안녕'.encode())
+server_socket = socket(AF_INET, SOCK_STREAM)
+server_socket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+server_socket.bind((Host, Port))
 
-data = client_socket.recv(1024)
-print('received from', repr(data.decode()))
+print('listening...')
+server_socket.listen()
+
+client_socket, addr = server_socket.accept()
+print('Connected by', addr)
+
+while True:
+    data = client_socket.recv(1024)
+    if not data:
+        break
+    print('Received from', addr, data.decode)
+    client_socket.sendall(data)
 
 client_socket.close()
+server_socket.close()
